@@ -8,8 +8,6 @@ This program implements an SMTP relay/proxy that:
 3. Logs warnings for non-allowed domains and ignores those messages
 4. Forwards valid emails to the actual SMTP server
 
-Author: Claude
-Date: 2025-03-24
 """
 
 import asyncio
