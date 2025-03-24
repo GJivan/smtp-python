@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  smtp-relay:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: smtp-relay
+    ports:
+      - "1025:1025"
+    volumes:
+      - ./certs:/etc/certs
+      - ./logs:/var/log
+    environment:
+      # Authentication settings
+      - SMTP_AUTH_USERNAME=myuser
+      - SMTP_AUTH_PASSWORD=mypassword
+      
+      # Domain filtering settings
+      - ALLOWED_FROM_DOMAINS=company.com,trusted-partner.com
+      - ALLOWED_TO_DOMAINS=company.com,client.com
+      
+      # Server configuration
+      - LISTEN_PORT=1025
+      - USE_TLS=false
+      
+      # Relay configuration (actual SMTP server)
+      - RELAY_HOST=smtp.company.com
+      - RELAY_PORT=587
+      - RELAY_USE_TLS=true
+      - RELAY_USERNAME=relay_user
+      - RELAY_PASSWORD=relay_password
+      
+      # Performance tuning
+      - MAX_CONNECTIONS=100
+      - TIMEOUT=30
+    restart: unless-stopped
+    networks:
+      - smtp-network
+
+networks:
+  smtp-network:
+    driver: bridge
